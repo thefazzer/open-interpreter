@@ -1,0 +1,57 @@
+import os
+import re
+
+def update_files(root_dir):
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        for filename in filenames:
+            if filename.endswith('.py'):
+                with open(os.path.join(dirpath, filename), 'r+') as file:
+                    content = file.read()
+                    content = re.sub('depracated', 'deprecated', content)
+                    content = re.sub('recieve', 'receive', content)
+                    file.seek(0)
+                    file.write(content)
+                    file.truncate()
+
+def main():
+    update_files('.')
+
+if __name__ == '__main__':
+    main()
+```
+
+```python
+import unittest
+import tempfile
+import shutil
+
+class TestUpdateFiles(unittest.TestCase):
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir)
+
+    def test_no_misspelled_words(self):
+        with open(os.path.join(self.test_dir, 'test.py'), 'w') as file:
+            file.write('This is a test file with no misspelled words.')
+        update_files(self.test_dir)
+        with open(os.path.join(self.test_dir, 'test.py'), 'r') as file:
+            self.assertEqual(file.read(), 'This is a test file with no misspelled words.')
+
+    def test_misspelled_words(self):
+        with open(os.path.join(self.test_dir, 'test.py'), 'w') as file:
+            file.write('This is a test file with depracated and recieve.')
+        update_files(self.test_dir)
+        with open(os.path.join(self.test_dir, 'test.py'), 'r') as file:
+            self.assertEqual(file.read(), 'This is a test file with deprecated and receive.')
+
+    def test_not_python_file(self):
+        with open(os.path.join(self.test_dir, 'test.txt'), 'w') as file:
+            file.write('This is a test file with depracated and recieve.')
+        update_files(self.test_dir)
+        with open(os.path.join(self.test_dir, 'test.txt'), 'r') as file:
+            self.assertEqual(file.read(), 'This is a test file with depracated and recieve.')
+
+if __name__ == '__main__':
+    unittest.main()
