@@ -3,6 +3,7 @@ The terminal interface is just a view. Just handles the very top layer.
 If you were to build a frontend this would be a way to do it
 """
 
+from concurrent.futures import ThreadPoolExecutor
 from .components.code_block import CodeBlock
 from .components.message_block import MessageBlock
 from .magic_commands import handle_magic_command
@@ -43,14 +44,15 @@ def terminal_interface(interpreter, message):
             # Exit gracefully
             break
 
-        if message.startswith("%") and interactive:
-            handle_magic_command(interpreter, message)
-            continue
+        with ThreadPoolExecutor() as executor:
+            if message.startswith("%") and interactive:
+                executor.submit(handle_magic_command, interpreter, message)
+                continue
 
-        # Many users do this
-        if message.strip() == "interpreter --local":
-            print("Please press CTRL-C then run `interpreter --local`.")
-            continue
+            # Many users do this
+            if message.strip() == "interpreter --local":
+                executor.submit(print, "Please press CTRL-C then run `interpreter --local`.")
+                continue
 
         # Track if we've ran a code block.
         # We'll use this to determine if we should render a new code block,
@@ -112,15 +114,16 @@ def terminal_interface(interpreter, message):
                                 if response.strip().lower() == "y":
                                     should_scan_code = True
 
-                        if should_scan_code:
-                            # Get code language and actual code from the chunk
-                            # We need to give these to semgrep when we start our scan
-                            language = chunk["executing"]["language"]
-                            code = chunk["executing"]["code"]
+                        with ThreadPoolExecutor() as executor:
+                            if should_scan_code:
+                                # Get code language and actual code from the chunk
+                                # We need to give these to semgrep when we start our scan
+                                language = chunk["executing"]["language"]
+                                code = chunk["executing"]["code"]
 
-                            scan_code(code, language, interpreter)
+                                executor.submit(scan_code, code, language, interpreter)
 
-                        response = input("  Would you like to run this code? (y/n)\n\n  ")
+                            response = executor.submit(input, "  Would you like to run this code? (y/n)\n\n  ").result()
                         print("")  # <- Aesthetic choice
 
                         if response.strip().lower() == "y":
