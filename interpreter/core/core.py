@@ -9,6 +9,7 @@ from ..utils.local_storage_path import get_storage_path
 from .respond import respond
 from ..llm.setup_llm import setup_llm
 from ..terminal_interface.terminal_interface import terminal_interface
+from concurrent.futures import ThreadPoolExecutor
 from ..terminal_interface.validate_llm_settings import validate_llm_settings
 from .generate_system_message import generate_system_message
 import appdirs
@@ -92,22 +93,23 @@ class Interpreter:
     
     def _streaming_chat(self, message=None, display=True):
 
-        # If we have a display,
-        # we can validate our LLM settings w/ the user first
-        if display:
-            validate_llm_settings(self)
+        with ThreadPoolExecutor() as executor:
+            # If we have a display,
+            # we can validate our LLM settings w/ the user first
+            if display:
+                executor.submit(validate_llm_settings, self)
 
-        # Setup the LLM
-        if not self._llm:
-            self._llm = setup_llm(self)
+            # Setup the LLM
+            if not self._llm:
+                self._llm = executor.submit(setup_llm, self).result()
 
-        # Sometimes a little more code -> a much better experience!
-        # Display mode actually runs interpreter.chat(display=False, stream=True) from within the terminal_interface.
-        # wraps the vanilla .chat(display=False) generator in a display.
-        # Quite different from the plain generator stuff. So redirect to that
-        if display:
-            yield from terminal_interface(self, message)
-            return
+            # Sometimes a little more code -> a much better experience!
+            # Display mode actually runs interpreter.chat(display=False, stream=True) from within the terminal_interface.
+            # wraps the vanilla .chat(display=False) generator in a display.
+            # Quite different from the plain generator stuff. So redirect to that
+            if display:
+                yield from executor.submit(terminal_interface, self, message).result()
+                return
         
         # One-off message
         if message or message == "":
@@ -143,15 +145,16 @@ class Interpreter:
         yield from respond(self)
             
     def reset(self):
-        for code_interpreter in self._code_interpreters.values():
-            code_interpreter.terminate()
-        self._code_interpreters = {}
+        with ThreadPoolExecutor() as executor:
+            for code_interpreter in self._code_interpreters.values():
+                executor.submit(code_interpreter.terminate)
+            self._code_interpreters = {}
 
-        # Reset the two functions below, in case the user set them
-        self.generate_system_message = lambda: generate_system_message(self)
-        self.get_relevant_procedures_string = lambda: get_relevant_procedures_string(self)
+            # Reset the two functions below, in case the user set them
+            self.generate_system_message = lambda: generate_system_message(self)
+            self.get_relevant_procedures_string = lambda: get_relevant_procedures_string(self)
 
-        self.__init__()
+            self.__init__()
 
 
     # These functions are worth exposing to developers
