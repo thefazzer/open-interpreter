@@ -1,4 +1,5 @@
 import requests
+from unittest.mock import patch
 
 
 class PoeAPI:
