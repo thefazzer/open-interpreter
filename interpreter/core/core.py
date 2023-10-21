@@ -7,7 +7,7 @@ import json
 import os
 from datetime import datetime
 
-from interpreter.utils import display_markdown_message
+# Removed unused import
 
 from ..cli.cli import cli
 from ..llm.setup_llm import setup_llm
@@ -21,6 +21,7 @@ from ..utils.get_config import get_config, user_config_path
 from ..utils.local_storage_path import get_storage_path
 from .generate_system_message import generate_system_message
 from .respond import respond
+from interpreter.poe_api import PoeAPI
 
 
 class Interpreter:
@@ -119,10 +120,17 @@ class Interpreter:
             if message == "":
                 message = "No entry from user - please suggest something to enter"
             self.messages.append({"role": "user", "message": message})
-            future = self.executor.submit(self._respond)
+            self.safe_mode = "off"
+            self.poe_api = PoeAPI()
+            response = self.poe_api.get_endpoint('actual_endpoint')  # Replace with actual endpoint
+            # Handle the response
+            data = json.loads(response)
+            # Use the data in the application
+            # Implement logic to use data in the application
+            self.use_data(data)
             yield from future.result()
-
-            # Save conversation if we've turned conversation_history on
+    
+                # Save conversation if we've turned conversation_history on
             if self.conversation_history:
                 # If it's the first message, set the conversation name
                 if not self.conversation_filename:
@@ -155,7 +163,28 @@ class Interpreter:
         )
 
     def _respond(self):
-        yield from respond(self)
+        # Use the PoeAPI instance to make requests to the PoE API and handle the responses
+        # This is a placeholder and should be replaced with the actual logic for making requests and handling responses
+        response = self.poe_api.get_endpoint('actual_endpoint')  # Replace with actual endpoint
+        # Handle the response
+        data = json.loads(response)
+        # Use the data in the application
+        # Implement logic to use data in the application
+        self.use_data(data)
+        
+        def use_data(self, data):
+        # Handle the data received from the PoE API
+        # The exact implementation of this function will depend on the specific needs of the application
+        # For example, if the data is a dictionary, you can access its elements like this:
+        element = data['key']  # Replace with actual key
+        # Then you can use the element in your application
+        # Implement logic to use element in the application
+        pass
+        def use_data(self, data):
+            # Handle the data received from the PoE API
+            # The exact implementation of this function will depend on the specific needs of the application
+            # Implement logic to handle data
+            print(data)
 
     def reset(self):
         for code_interpreter in self._code_interpreters.values():
