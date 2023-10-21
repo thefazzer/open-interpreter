@@ -61,6 +61,7 @@ class Interpreter:
         self._procedures_db = {}
         self.download_open_procedures = True
         self.embed_function = embed_function
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
         # Number of procedures to add to the system message
         self.num_procedures = 2
 
@@ -106,7 +107,8 @@ class Interpreter:
         # wraps the vanilla .chat(display=False) generator in a display.
         # Quite different from the plain generator stuff. So redirect to that
         if display:
-            yield from terminal_interface(self, message)
+            future = self.executor.submit(terminal_interface, self, message)
+            yield from future.result()
             return
         
         # One-off message
@@ -114,7 +116,8 @@ class Interpreter:
             if message == "":
                 message = "No entry from user - please suggest something to enter"
             self.messages.append({"role": "user", "message": message})
-            yield from self._respond()
+            future = self.executor.submit(self._respond)
+            yield from future.result()
 
             # Save conversation if we've turned conversation_history on
             if self.conversation_history:
@@ -145,6 +148,8 @@ class Interpreter:
     def reset(self):
         for code_interpreter in self._code_interpreters.values():
             code_interpreter.terminate()
+        self.executor.shutdown(wait=True)
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
         self._code_interpreters = {}
 
         # Reset the two functions below, in case the user set them
