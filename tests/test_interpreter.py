@@ -2,6 +2,8 @@ import os
 from random import randint
 import time
 import pytest
+from pytest import mark
+from pytest_xdist import pytest
 import interpreter
 from interpreter.utils.count_tokens import count_tokens, count_messages_tokens
 import time
@@ -27,7 +29,8 @@ def teardown_function():
     time.sleep(5)
 
 
-def test_config_loading():
+@mark.parametrize("config_path", ["./config.test.yaml"])
+def test_config_loading(config_path):
     # because our test is running from the root directory, we need to do some
     # path manipulation to get the actual path to the config file or our config
     # loader will try to load from the wrong directory and fail
@@ -43,7 +46,8 @@ def test_config_loading():
 
     assert temperature_ok and model_ok and debug_mode_ok
 
-def test_system_message_appending():
+@mark.parametrize("ping_request, pong_response", [("ping", "pong")])
+def test_system_message_appending(ping_request, pong_response):
     ping_system_message = (
         "Respond to a `ping` with a `pong`. No code. No explanations. Just `pong`."
     )
@@ -61,12 +65,14 @@ def test_system_message_appending():
     ]
 
 
-def test_reset():
+@mark.parametrize("messages", [[]])
+def test_reset(messages):
     # make sure that interpreter.reset() clears out the messages Array
-    assert interpreter.messages == []
+    assert interpreter.messages == messages
 
 
-def test_token_counter():
+@mark.parametrize("system_message, prompt", [(interpreter.system_message, "How many tokens is this?")])
+def test_token_counter(system_message, prompt):
     system_tokens = count_tokens(text=interpreter.system_message, model=interpreter.model)
     
     prompt = "How many tokens is this?"
@@ -88,7 +94,8 @@ def test_token_counter():
     assert system_tokens_ok and prompt_tokens_ok
 
 
-def test_hello_world():
+@mark.parametrize("hello_world_message", ["Please reply with just the words Hello, World! and nothing else. Do not run code. No confirmation just the text."])
+def test_hello_world(hello_world_message):
     hello_world_response = "Hello, World!"
 
     hello_world_message = f"Please reply with just the words {hello_world_response} and nothing else. Do not run code. No confirmation just the text."
@@ -100,8 +107,9 @@ def test_hello_world():
         {"role": "assistant", "message": hello_world_response},
     ]
 
-@pytest.mark.skip(reason="Math is hard")
-def test_math():
+@mark.skip(reason="Math is hard")
+@mark.parametrize("n1, n2", [(randint(1, 99), randint(1001, 9999))])
+def test_math(n1, n2):
     # we'll generate random integers between this min and max in our math tests
     min_number = randint(1, 99)
     max_number = randint(1001, 9999)
@@ -122,19 +130,16 @@ def test_math():
     assert str(round(test_result, 2)) in messages[-1]["message"]
 
 
-def test_delayed_exec():
-    interpreter.chat(
-        """Can you write a single block of code and run_code it that prints something, then delays 1 second, then prints something else? No talk just code. Thanks!"""
-    )
+@mark.parametrize("delayed_exec_message", ["Can you write a single block of code and run_code it that prints something, then delays 1 second, then prints something else? No talk just code. Thanks!"])
+def test_delayed_exec(delayed_exec_message):
+    interpreter.chat(delayed_exec_message)
 
-@pytest.mark.skip(reason="This works fine when I run it but fails frequently in Github Actions... will look into it after the hackathon")
-def test_nested_loops_and_multiple_newlines():
-    interpreter.chat(
-        """Can you write a nested for loop in python and shell and run them? Don't forget to properly format your shell script and use semicolons where necessary. Also put 1-3 newlines between each line in the code. Only generate and execute the code. No explanations. Thanks!"""
-    )
+@mark.skip(reason="This works fine when I run it but fails frequently in Github Actions... will look into it after the hackathon")
+@mark.parametrize("nested_loops_message", ["Can you write a nested for loop in python and shell and run them? Don't forget to properly format your shell script and use semicolons where necessary. Also put 1-3 newlines between each line in the code. Only generate and execute the code. No explanations. Thanks!"])
+def test_nested_loops_and_multiple_newlines(nested_loops_message):
+    interpreter.chat(nested_loops_message)
 
 
-def test_markdown():
-    interpreter.chat(
-        """Hi, can you test out a bunch of markdown features? Try writing a fenced code block, a table, headers, everything. DO NOT write the markdown inside a markdown code block, just write it raw."""
-    )
+@mark.parametrize("markdown_message", ["Hi, can you test out a bunch of markdown features? Try writing a fenced code block, a table, headers, everything. DO NOT write the markdown inside a markdown code block, just write it raw."])
+def test_markdown(markdown_message):
+    interpreter.chat(markdown_message)
