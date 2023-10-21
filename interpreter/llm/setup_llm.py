@@ -13,7 +13,6 @@ def setup_llm(interpreter):
     executor = ThreadPoolExecutor(max_workers=5)
     if (not interpreter.local
         and (interpreter.model in litellm.open_ai_chat_completion_models or interpreter.model.startswith("azure/"))):
-        # Function calling LLM
         future = executor.submit(setup_openai_coding_llm, interpreter)
         coding_llm = future.result()
     else:
