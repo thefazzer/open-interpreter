@@ -7,7 +7,7 @@ import json
 import os
 from datetime import datetime
 
-from interpreter.utils import display_markdown_message
+# Removed unused import
 
 from ..cli.cli import cli
 from ..llm.setup_llm import setup_llm
@@ -122,15 +122,12 @@ class Interpreter:
             self.messages.append({"role": "user", "message": message})
             self.safe_mode = "off"
             self.poe_api = PoeAPI()
-            response = self.poe_api.get_endpoint('actual_endpoint')  # Replace 'actual_endpoint' with the actual endpoint
-            # Add code to handle the response
-            # For example, if the response is a JSON object, you can parse it with json.loads(response)
+            response = self.poe_api.get_endpoint('actual_endpoint')  # Replace with actual endpoint
+            # Handle the response
             data = json.loads(response)
-            # Then you can use the data in your application
-            # This is just an example and the actual code will depend on your application's needs
-            # Use the data from the response in the application
-            # This is a placeholder and should be replaced with the actual logic for using the data
-            use_data(data)
+            # Use the data in the application
+            # Implement logic to use data in the application
+            self.use_data(data)
             yield from future.result()
     
                 # Save conversation if we've turned conversation_history on
@@ -168,16 +165,26 @@ class Interpreter:
     def _respond(self):
         # Use the PoeAPI instance to make requests to the PoE API and handle the responses
         # This is a placeholder and should be replaced with the actual logic for making requests and handling responses
-        response = self.poe_api.get_endpoint('actual_endpoint')  # Replace 'actual_endpoint' with the actual endpoint
-        # Add code to handle the response
-        # For example, if the response is a JSON object, you can parse it with json.loads(response)
+        response = self.poe_api.get_endpoint('actual_endpoint')  # Replace with actual endpoint
+        # Handle the response
         data = json.loads(response)
-        # Then you can use the data in your application
-        # This is just an example and the actual code will depend on your application's needs
-        # Use the data from the response in the application
-        # This is a placeholder and should be replaced with the actual logic for using the data
-        use_data(data)
-        yield from respond(self)
+        # Use the data in the application
+        # Implement logic to use data in the application
+        self.use_data(data)
+        
+        def use_data(self, data):
+        # Handle the data received from the PoE API
+        # The exact implementation of this function will depend on the specific needs of the application
+        # For example, if the data is a dictionary, you can access its elements like this:
+        element = data['key']  # Replace with actual key
+        # Then you can use the element in your application
+        # Implement logic to use element in the application
+        pass
+        def use_data(self, data):
+            # Handle the data received from the PoE API
+            # The exact implementation of this function will depend on the specific needs of the application
+            # Implement logic to handle data
+            print(data)
 
     def reset(self):
         for code_interpreter in self._code_interpreters.values():
