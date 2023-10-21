@@ -40,7 +40,7 @@ def test_config_loading(config_path):
     interpreter.extend_config(config_path=config_path)
 
     # check the settings we configured in our config.test.yaml file
-    temperature_ok = interpreter.temperature == 0.25
+    temperature_ok = interpreter.temperature == 0.8
     model_ok = interpreter.model == "gpt-3.5-turbo"
     debug_mode_ok = interpreter.debug_mode
     if not (temperature_ok and model_ok and debug_mode_ok):
@@ -48,9 +48,7 @@ def test_config_loading(config_path):
 
 @mark.parametrize("ping_request, pong_response", [("ping", "pong")])
 def test_system_message_appending(ping_request, pong_response):
-    ping_system_message = (
-        "Respond to a `ping` with a `pong`. No code. No explanations. Just `pong`."
-    )
+    ping_system_message = "Respond to a `ping` with a `pong`. No code. No explanations. Just `pong`."
 
     ping_request = "ping"
     pong_response = "pong"
@@ -98,6 +96,7 @@ def test_token_counter(system_message, prompt):
 @mark.parametrize("hello_world_message", ["Please reply with just the words Hello, World! and nothing else. Do not run code. No confirmation just the text."])
 def test_hello_world(hello_world_message):
     hello_world_response = "Hello, World!"
+    hello_world_message = f"Please reply with just the words {hello_world_response} and nothing else. Do not run code. No confirmation just the text. This is a test."
 
     hello_world_message = f"Please reply with just the words {hello_world_response} and nothing else. Do not run code. No confirmation just the text."
 
