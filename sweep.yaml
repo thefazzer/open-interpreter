@@ -21,40 +21,7 @@ gha_enabled: True
 # Example:
 #
 # description: sweepai/sweep is a python project. The main api endpoints are in sweepai/api.py. Write code that adheres to PEP8.
-description: " 1 argparse, json, subprocess, threading, and sys - these standard Python libraries    
-      are being used. This suggests a console-based application that handles JSON, uses   
-      subprocesses, and manages threads.                                                  
-    2 ast - handling Python's abstract syntax trees.                                      
-    3 numpy - used for handling large, multi-dimensional arrays and matrices of numeric   
-      data.                                                                               
-    4 rich - is used for the CLI's rich interface elements.                               
-    5 requests, webbrowser - suggests web data interaction, possibly for updates or       
-      web-based resources.                                                                
-    6 yaml - implies the use of YAML formatted files, possibly used for configurations.   
-    7 tiktoken, tokentrim - suggests that tokens are being generated and managed.         
-    8 litellm, ooba - could imply usage of machine learning or AI modules.                
-    9 shlex, pkg_resources - used for utility tasks.                                      
-   10 pytest - indicates the use of a testing framework for Python.                                                                                                
-  Architectural Patterns and Design                                                                                                                                           
-    1 Multiple coding languages supported: preprocess_python, preprocess_shell,           
-      preprocess_powershell, preprocess_javascript.                                       
-    2 Presence of a command line interface: handle_undo, handle_help, handle_debug,       
-      handle_reset, terminal_interface.                                                   
-    3 Debugging facility: add_active_line_prints, wrap_in_try_except.                     
-    4 Configuration file usage: get_config_path, get_config.                              
-    5 Using token count mechanisms: count_tokens, token_cost, count_messages_tokens.      
-    6 Interaction with file system: open_folder, get_conversations, embed_function.       
-    7 Testing framework present: Starts with test_.                                       
-    8 Interaction with OpenAI's API or similar: convert_to_openai_messages.               
-    9 Has specific setups for different machine learning tasks: setup_text_llm,           
-      setup_llm, setup_openai_coding_llm, setup_local_text_llm.                           
-   10 Interactive and responds to user commands or events: respond.                       
-   11 Utilizes specific temporary files during code execution: create_temporary_file,     
-      cleanup_temporary_file.                                                             
-   12 Uses encapsulation: Functions starting with get_.                                   
-   13 Has the ability to navigate through conversational history:                         
-      render_past_conversation, conversation_navigator.                                   
-            "
+description: "OpenAI's Code Interpreter is a console-based application that handles JSON, uses subprocesses, and manages threads. It uses the standard Python libraries argparse, json, subprocess, threading, and sys, as well as the libraries numpy, rich, requests, webbrowser, yaml, tiktoken, tokentrim, litellm, ooba, shlex, pkg_resources, and pytest. The project supports multiple coding languages, has a command line interface, a debugging facility, uses a configuration file, uses token count mechanisms, interacts with the file system, has a testing framework, interacts with OpenAI's API or similar, has specific setups for different machine learning tasks, is interactive and responds to user commands or events, utilizes specific temporary files during code execution, uses encapsulation, and has the ability to navigate through conversational history."
 
 # This sets whether to create pull requests as drafts. If this is set to True, then all pull requests will be created as drafts and GitHub Actions will not be triggered.
 draft: False
