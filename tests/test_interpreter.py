@@ -1,5 +1,5 @@
 import os
-from random import randint
+from secrets import randbelow
 import time
 import pytest
 from pytest import mark
@@ -42,9 +42,9 @@ def test_config_loading(config_path):
     # check the settings we configured in our config.test.yaml file
     temperature_ok = interpreter.temperature == 0.25
     model_ok = interpreter.model == "gpt-3.5-turbo"
-    debug_mode_ok = interpreter.debug_mode == True
-
-    assert temperature_ok and model_ok and debug_mode_ok
+    debug_mode_ok = interpreter.debug_mode
+    if not (temperature_ok and model_ok and debug_mode_ok):
+        raise AssertionError()
 
 @mark.parametrize("ping_request, pong_response", [("ping", "pong")])
 def test_system_message_appending(ping_request, pong_response):
@@ -68,7 +68,8 @@ def test_system_message_appending(ping_request, pong_response):
 @mark.parametrize("messages", [[]])
 def test_reset(messages):
     # make sure that interpreter.reset() clears out the messages Array
-    assert interpreter.messages == messages
+    if not interpreter.messages == messages:
+        raise AssertionError()
 
 
 @mark.parametrize("system_message, prompt", [(interpreter.system_message, "How many tokens is this?")])
@@ -91,7 +92,8 @@ def test_token_counter(system_message, prompt):
 
     prompt_tokens_ok = system_tokens + prompt_tokens == prompt_token_test[0]
 
-    assert system_tokens_ok and prompt_tokens_ok
+    if not (system_tokens_ok and prompt_tokens_ok):
+        raise AssertionError()
 
 
 @mark.parametrize("hello_world_message", ["Please reply with just the words Hello, World! and nothing else. Do not run code. No confirmation just the text."])
@@ -108,13 +110,11 @@ def test_hello_world(hello_world_message):
     ]
 
 @mark.skip(reason="Math is hard")
-@mark.parametrize("n1, n2", [(randint(1, 99), randint(1001, 9999))])
-def test_math(n1, n2):
-    # we'll generate random integers between this min and max in our math tests
-    min_number = randint(1, 99)
-    max_number = randint(1001, 9999)
-
-    n1 = randint(min_number, max_number)
+@mark.parametrize("n1, n2", [(randbelow(100), randbelow(10000))])
+min_number = randbelow(100)
+max_number = randbelow(10000)
+n1 = randbelow(max_number - min_number + 1) + min_number
+n2 = randbelow(max_number - min_number + 1) + min_number
     n2 = randint(min_number, max_number)
 
     test_result = n1 + n2 * (n1 - n2) / (n2 + n1)
@@ -127,7 +127,8 @@ def test_math(n1, n2):
 
     messages = interpreter.chat(order_of_operations_message)
 
-    assert str(round(test_result, 2)) in messages[-1]["message"]
+    if not str(round(test_result, 2)) in messages[-1]["message"]:
+        raise AssertionError()
 
 
 @mark.parametrize("delayed_exec_message", ["Can you write a single block of code and run_code it that prints something, then delays 1 second, then prints something else? No talk just code. Thanks!"])
