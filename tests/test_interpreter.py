@@ -2,7 +2,7 @@ import os
 from secrets import randbelow
 import pytest
 from pytest import mark
-from pytest_xdist import pytest
+import pytest_xdist
 import interpreter
 from interpreter.utils.count_tokens import count_tokens, count_messages_tokens
 
