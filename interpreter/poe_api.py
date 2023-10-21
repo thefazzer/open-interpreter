@@ -11,8 +11,7 @@ class PoeAPI:
         return response.json()
 
 
-import pytest
-from unittest.mock import patch
+# Moved to the top of the file
 
 
 @patch("requests.get")
