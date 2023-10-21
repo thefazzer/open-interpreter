@@ -19,6 +19,7 @@ import json
 from ..utils.check_for_update import check_for_update
 from ..utils.display_markdown_message import display_markdown_message
 from ..utils.embed import embed_function
+import concurrent.futures
 
 
 class Interpreter:
