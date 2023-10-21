@@ -16,6 +16,7 @@ def setup_llm(interpreter):
         future = executor.submit(setup_openai_coding_llm, interpreter)
         coding_llm = future.result()
     else:
+        executor = ThreadPoolExecutor(max_workers=5)
         future1 = executor.submit(setup_text_llm, interpreter)
         text_llm = future1.result()
         executor = ThreadPoolExecutor(max_workers=5)
