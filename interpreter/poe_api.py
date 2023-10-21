@@ -13,7 +13,6 @@ class PoeAPI:
 
 import pytest
 from unittest.mock import patch
-from interpreter.poe_api import PoeAPI
 
 
 @patch("requests.get")
