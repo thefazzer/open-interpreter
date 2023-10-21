@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Debug Interpreter",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/faz/mambaforge/bin/interpreter",
+            "args": ["-y", "-m", "gpt-4"],
+            "justMyCode": false,
+            "cwd": "/home/faz/devski/open-interpreter/interpreter",
+            "pathMappings": [
+                {
+                  "localRoot": "/home/faz/devski/open-interpreter/interpreter",
+                  "remoteRoot": "/home/faz/mambaforge/lib/python3.10/site-packages/interpreter"
+                }
+              ]
+        },
+    ]
+}

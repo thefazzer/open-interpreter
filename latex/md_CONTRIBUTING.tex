@@ -1,0 +1,48 @@
+Thank you for your interest in contributing! As an open source project, we rely on developers like you to make conversational AI accessible.
+
+There are many ways to contribute, from reporting bugs and suggesting features to improving the code. We appreciate you taking the time to get involved.\hypertarget{md_CONTRIBUTING_autotoc_md1}{}\doxysection{Roadmap}\label{md_CONTRIBUTING_autotoc_md1}
+We are working on developing a public roadmap to provide visibility into our priorities and upcoming enhancements.
+
+For now, our focus is on resolving issues with Code\+Llama integration and keeping the core interpreter logic simple and understandable. We want to empower non-\/coders by turning natural language into executable actions.
+
+As such, we aim to keep the codebase simplified rather than overly complex. Our goal is to give the power of coding -\/ turning words into actions -\/ to people without coding knowledge. We welcome discussions on how to maintain this approach as we add new capabilities.\hypertarget{md_CONTRIBUTING_autotoc_md2}{}\doxysection{Reporting Issues}\label{md_CONTRIBUTING_autotoc_md2}
+If you encounter a bug or have a brilliant feature in mind, don\textquotesingle{}t hesitate to \href{https://github.com/KillianLucas/open-interpreter/issues/new/choose}{\texttt{ open a new issue}}. To ensure a swift and effective response, please provide the following\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Bug Reports\+:}} Include detailed steps to reproduce the issue, along with specifics about your operating system and Python version, with screenshots and code/error snippets if required.
+\item {\bfseries{Feature Requests\+:}} Provide a comprehensive explanation of how your idea benefits Open Interpreter and its community.
+\end{DoxyItemize}\hypertarget{md_CONTRIBUTING_autotoc_md3}{}\doxysection{Contributing Code}\label{md_CONTRIBUTING_autotoc_md3}
+We welcome code contributions through pull requests. Here are some guidelines\+:
+
+
+\begin{DoxyItemize}
+\item Before taking on significant code changes, please discuss your ideas on \href{https://discord.gg/6p3fD6rBVm}{\texttt{ Discord}} to ensure they align with our project vision. We want to keep the codebase simple and unintimidating for new users.
+\item Fork the repository and create a new branch for your work.
+\item Make changes with clear code comments explaining your approach. Try to follow existing conventions in the code.
+\item Open a PR to {\ttfamily main} linking any related issues. Provide detailed context on your changes.
+\item We will review PRs when possible and work with you to integrate your contribution. Please be patient as reviews take time.
+\item Once approved, your code will be merged -\/ thank you for improving Open Interpreter!
+\end{DoxyItemize}\hypertarget{md_CONTRIBUTING_autotoc_md4}{}\doxysection{Running Your Local Fork}\label{md_CONTRIBUTING_autotoc_md4}
+Once you\textquotesingle{}ve forked the code and created a new branch for your work, you can run the fork in CLI mode by following these steps\+:
+
+
+\begin{DoxyEnumerate}
+\item CD into the project folder {\ttfamily /open-\/interpreter}
+\item Install dependencies {\ttfamily poetry install}
+\item Run the program {\ttfamily poetry run interpreter}
+\end{DoxyEnumerate}
+
+After modifying the source code, you will need to do {\ttfamily poetry run interpreter} again.\hypertarget{md_CONTRIBUTING_autotoc_md5}{}\doxysubsection{Installing New Packages}\label{md_CONTRIBUTING_autotoc_md5}
+If you wish to install new dependencies into the project, please use {\ttfamily poetry add package-\/name}.\hypertarget{md_CONTRIBUTING_autotoc_md6}{}\doxysubsection{Known Issues}\label{md_CONTRIBUTING_autotoc_md6}
+For some, {\ttfamily poetry install} might hang on some dependencies. As a first step, try to run the following command in your terminal\+: ~\newline
+
+
+{\ttfamily export PYTHON\+\_\+\+KEYRING\+\_\+\+BACKEND=keyring.\+backends.\+fail.\+Keyring} ~\newline
+
+
+Then run {\ttfamily poetry install} again. If this doesn\textquotesingle{}t work, please join our \href{https://discord.gg/6p3fD6rBVm}{\texttt{ Discord community}} for help.\hypertarget{md_CONTRIBUTING_autotoc_md7}{}\doxysection{Questions?}\label{md_CONTRIBUTING_autotoc_md7}
+Join our \href{https://discord.gg/6p3fD6rBVm}{\texttt{ Discord community}} to connect with contributors. We\textquotesingle{}re happy to guide you through your first open source contribution!\hypertarget{md_CONTRIBUTING_autotoc_md8}{}\doxysection{Licensing}\label{md_CONTRIBUTING_autotoc_md8}
+Contributions to open-\/interpreter would be under the MIT license.
+
+Thank you for your dedication and understanding as we continue refining our processes. We sincerely appreciate your involvement! 

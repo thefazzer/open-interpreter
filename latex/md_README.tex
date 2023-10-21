@@ -1,0 +1,387 @@
+\doxysection*{● Open Interpreter}
+
+
+
+\href{https://discord.gg/6p3fD6rBVm}{\texttt{  }} \href{README_JA.md}{\texttt{ }} \href{README_ZH.md}{\texttt{ }} \href{README_IN.md}{\texttt{ }}  ~\newline
+ ~\newline
+ {\bfseries{Let language models run code on your computer.}}~\newline
+ An open-\/source, locally running implementation of Open\+AI\textquotesingle{}s Code Interpreter.~\newline
+ ~\newline
+\href{https://openinterpreter.com}{\texttt{ Get early access to the desktop app}}‎ ‎ $\vert$‎ ‎ {\bfseries{\href{https://docs.openinterpreter.com/}{\texttt{ Read our new docs}}}}~\newline
+ 
+
+~\newline
+
+
+
+
+~\newline
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pip install open-\/interpreter}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter}
+
+\end{DoxyCode}
+
+
+~\newline
+
+
+{\bfseries{Open Interpreter}} lets LLMs run code (Python, Javascript, Shell, and more) locally. You can chat with Open Interpreter through a Chat\+GPT-\/like interface in your terminal by running {\ttfamily \$ interpreter} after installing.
+
+This provides a natural-\/language interface to your computer\textquotesingle{}s general-\/purpose capabilities\+:
+
+
+\begin{DoxyItemize}
+\item Create and edit photos, videos, PDFs, etc.
+\item Control a Chrome browser to perform research
+\item Plot, clean, and analyze large datasets
+\item ...etc.
+\end{DoxyItemize}
+
+{\bfseries{⚠️ Note\+: You\textquotesingle{}ll be asked to approve code before it\textquotesingle{}s run.}}
+
+~\newline
+\hypertarget{md_README_autotoc_md9}{}\doxysubsection{Demo}\label{md_README_autotoc_md9}
+\href{https://github.com/KillianLucas/open-interpreter/assets/63927363/37152071-680d-4423-9af3-64836a6f7b60}{\texttt{ https\+://github.\+com/\+Killian\+Lucas/open-\/interpreter/assets/63927363/37152071-\/680d-\/4423-\/9af3-\/64836a6f7b60}}\hypertarget{md_README_autotoc_md10}{}\doxyparagraph{An interactive demo is also available on Google Colab\+:}\label{md_README_autotoc_md10}
+\href{https://colab.research.google.com/drive/1WKmRXZgsErej2xUriKzxrEAXdxMSgWbb?usp=sharing}{\texttt{ }}\hypertarget{md_README_autotoc_md11}{}\doxyparagraph{Along with an example implementation of a voice interface (inspired by $<$em$>$\+Her$<$/em$>$)\+:}\label{md_README_autotoc_md11}
+\href{https://colab.research.google.com/drive/1NojYGHDgxH6Y1G1oxThEBBb2AtyODBIK}{\texttt{ }}\hypertarget{md_README_autotoc_md12}{}\doxysubsection{Quick Start}\label{md_README_autotoc_md12}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pip install open-\/interpreter}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md13}{}\doxysubsubsection{Terminal}\label{md_README_autotoc_md13}
+After installation, simply run {\ttfamily interpreter}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md14}{}\doxysubsubsection{Python}\label{md_README_autotoc_md14}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} interpreter}
+\DoxyCodeLine{}
+\DoxyCodeLine{interpreter.chat(\textcolor{stringliteral}{"{}Plot AAPL and META's normalized stock prices"{}}) \textcolor{comment}{\# Executes a single command}}
+\DoxyCodeLine{interpreter.chat() \textcolor{comment}{\# Starts an interactive chat}}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md15}{}\doxysubsection{Comparison to Chat\+GPT\textquotesingle{}s Code Interpreter}\label{md_README_autotoc_md15}
+Open\+AI\textquotesingle{}s release of \href{https://openai.com/blog/chatgpt-plugins\#code-interpreter}{\texttt{ Code Interpreter}} with GPT-\/4 presents a fantastic opportunity to accomplish real-\/world tasks with Chat\+GPT.
+
+However, Open\+AI\textquotesingle{}s service is hosted, closed-\/source, and heavily restricted\+:
+
+
+\begin{DoxyItemize}
+\item No internet access.
+\item \href{https://wfhbrian.com/mastering-chatgpts-code-interpreter-list-of-python-packages/}{\texttt{ Limited set of pre-\/installed packages}}.
+\item 100 MB maximum upload, 120.\+0 second runtime limit.
+\item State is cleared (along with any generated files or links) when the environment dies.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+
+
+Open Interpreter overcomes these limitations by running on your local environment. It has full access to the internet, isn\textquotesingle{}t restricted by time or file size, and can utilize any package or library.
+
+This combines the power of GPT-\/4\textquotesingle{}s Code Interpreter with the flexibility of your local development environment.\hypertarget{md_README_autotoc_md17}{}\doxysubsection{Commands}\label{md_README_autotoc_md17}
+{\bfseries{Update\+:}} The Generator Update (0.\+1.\+5) introduced streaming\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{message = \textcolor{stringliteral}{"{}What operating system are we on?"{}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{for} chunk \textcolor{keywordflow}{in} interpreter.chat(message, display=\textcolor{keyword}{False}, stream=\textcolor{keyword}{True}):}
+\DoxyCodeLine{  print(chunk)}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md18}{}\doxysubsubsection{Interactive Chat}\label{md_README_autotoc_md18}
+To start an interactive chat in your terminal, either run {\ttfamily interpreter} from the command line\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter}
+
+\end{DoxyCode}
+
+
+Or {\ttfamily interpreter.\+chat()} from a .py file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter.chat()}
+
+\end{DoxyCode}
+
+
+{\bfseries{You can also stream each chunk\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{message = \textcolor{stringliteral}{"{}What operating system are we on?"{}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{for} chunk \textcolor{keywordflow}{in} interpreter.chat(message, display=\textcolor{keyword}{False}, stream=\textcolor{keyword}{True}):}
+\DoxyCodeLine{  print(chunk)}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md19}{}\doxysubsubsection{Programmatic Chat}\label{md_README_autotoc_md19}
+For more precise control, you can pass messages directly to {\ttfamily .chat(message)}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter.chat(\textcolor{stringliteral}{"{}Add subtitles to all videos in /videos."{}})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# ... Streams output to your terminal, completes task ...}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interpreter.chat(\textcolor{stringliteral}{"{}These look great but can you make the subtitles bigger?"{}})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# ...}}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md20}{}\doxysubsubsection{Start a New Chat}\label{md_README_autotoc_md20}
+In Python, Open Interpreter remembers conversation history. If you want to start fresh, you can reset it\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter.reset()}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md21}{}\doxysubsubsection{Save and Restore Chats}\label{md_README_autotoc_md21}
+{\ttfamily interpreter.\+chat()} returns a List of messages, which can be used to resume a conversation with {\ttfamily interpreter.\+messages = messages}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{messages = interpreter.chat(\textcolor{stringliteral}{"{}My name is Killian."{}}) \textcolor{comment}{\# Save messages to 'messages'}}
+\DoxyCodeLine{interpreter.reset() \textcolor{comment}{\# Reset interpreter ("{}Killian"{} will be forgotten)}}
+\DoxyCodeLine{}
+\DoxyCodeLine{interpreter.messages = messages \textcolor{comment}{\# Resume chat from 'messages' ("{}Killian"{} will be remembered)}}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md22}{}\doxysubsubsection{Customize System Message}\label{md_README_autotoc_md22}
+You can inspect and configure Open Interpreter\textquotesingle{}s system message to extend its functionality, modify permissions, or give it more context.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter.system\_message += \textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{\textcolor{stringliteral}{Run shell commands with -\/y so the user doesn't have to confirm them.}}
+\DoxyCodeLine{\textcolor{stringliteral}{"{}"{}"{}}}
+\DoxyCodeLine{print(interpreter.system\_message)}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md23}{}\doxysubsubsection{Change your Language Model}\label{md_README_autotoc_md23}
+Open Interpreter uses \href{https://docs.litellm.ai/docs/providers/}{\texttt{ Lite\+LLM}} to connect to language models.
+
+You can change the model by setting the model parameter\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/model gpt-\/3.5-\/turbo}
+\DoxyCodeLine{interpreter -\/-\/model claude-\/2}
+\DoxyCodeLine{interpreter -\/-\/model command-\/nightly}
+
+\end{DoxyCode}
+
+
+In Python, set the model on the object\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter.model = \textcolor{stringliteral}{"{}gpt-\/3.5-\/turbo"{}}}
+
+\end{DoxyCode}
+
+
+\href{https://docs.litellm.ai/docs/providers/}{\texttt{ Find the appropriate "{}model"{} string for your language model here.}}\hypertarget{md_README_autotoc_md24}{}\doxysubsubsection{Running Open Interpreter locally}\label{md_README_autotoc_md24}
+ⓘ {\bfseries{Issues running locally?}} Read our new GPU setup guide and Windows setup guide.
+
+You can run {\ttfamily interpreter} in local mode from the command line to use {\ttfamily Code Llama}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/local}
+
+\end{DoxyCode}
+
+
+Or run any Hugging Face model {\bfseries{locally}} by running {\ttfamily -\/-\/local} in conjunction with a repo ID (e.\+g. \char`\"{}tiiuae/falcon-\/180\+B\char`\"{})\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/local -\/-\/model tiiuae/falcon-\/180B}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md25}{}\doxyparagraph{Local model params}\label{md_README_autotoc_md25}
+You can easily modify the {\ttfamily max\+\_\+tokens} and {\ttfamily context\+\_\+window} (in tokens) of locally running models.
+
+Smaller context windows will use less RAM, so we recommend trying a shorter window if GPU is failing.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/max\_tokens 2000 -\/-\/context\_window 16000}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md26}{}\doxysubsubsection{Debug mode}\label{md_README_autotoc_md26}
+To help contributors inspect Open Interpreter, {\ttfamily -\/-\/debug} mode is highly verbose.
+
+You can activate debug mode by using it\textquotesingle{}s flag ({\ttfamily interpreter -\/-\/debug}), or mid-\/chat\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ interpreter}
+\DoxyCodeLine{...}
+\DoxyCodeLine{> \%debug true <-\/ Turns on debug mode}
+\DoxyCodeLine{}
+\DoxyCodeLine{> \%debug false <-\/ Turns off debug mode}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md27}{}\doxysubsubsection{Interactive Mode Commands}\label{md_README_autotoc_md27}
+In the interactive mode, you can use the below commands to enhance your experience. Here\textquotesingle{}s a list of available commands\+:
+
+{\bfseries{Available Commands\+:}} ~\newline
+ • {\ttfamily debug \mbox{[}true/false\mbox{]}}\+: Toggle debug mode. Without arguments or with \textquotesingle{}true\textquotesingle{}, it enters debug mode. With \textquotesingle{}false\textquotesingle{}, it exits debug mode. • {\ttfamily reset}\+: Resets the current session. • {\ttfamily undo}\+: Remove previous messages and its response from the message history. • {\ttfamily save\+\_\+message \mbox{[}path\mbox{]}}\+: Saves messages to a specified JSON path. If no path is provided, it defaults to \textquotesingle{}messages.\+json\textquotesingle{}. • {\ttfamily load\+\_\+message \mbox{[}path\mbox{]}}\+: Loads messages from a specified JSON path. If no path ~\newline
+ is provided, it defaults to \textquotesingle{}messages.\+json\textquotesingle{}. • {\ttfamily tokens \mbox{[}prompt\mbox{]}}\+: Calculate the tokens used by the current conversation\textquotesingle{}s messages and estimate their cost, and optionally calculate the tokens and estimated cost of a {\ttfamily prompt} if one is provided. Relies on \href{https://docs.litellm.ai/docs/completion/token_usage\#2-cost_per_token}{\texttt{ Lite\+LLM\textquotesingle{}s {\ttfamily cost\+\_\+per\+\_\+token()} method}} for estimated cost. • {\ttfamily help}\+: Show the help message.\hypertarget{md_README_autotoc_md28}{}\doxysubsubsection{Configuration}\label{md_README_autotoc_md28}
+Open Interpreter allows you to set default behaviors using a {\ttfamily config.\+yaml} file.
+
+This provides a flexible way to configure the interpreter without changing command-\/line arguments every time.
+
+Run the following command to open the configuration file\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/config}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md29}{}\doxyparagraph{Multiple Configuration Files}\label{md_README_autotoc_md29}
+Open Interpreter supports multiple {\ttfamily config.\+yaml} files, allowing you to easily switch between configurations via the {\ttfamily -\/-\/config\+\_\+file} argument.
+
+{\bfseries{Note}}\+: {\ttfamily -\/-\/config\+\_\+file} accepts either a file name or a file path. File names will use the default configuration directory, while file paths will use the specified path.
+
+To create or edit a new configuration, run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/config -\/-\/config\_file \$config\_path}
+
+\end{DoxyCode}
+
+
+To have Open Interpreter load a specific configuration file run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/config\_file \$config\_path}
+
+\end{DoxyCode}
+
+
+{\bfseries{Note}}\+: Replace {\ttfamily \$config\+\_\+path} with the name of or path to your configuration file.
+
+\label{md_README_autotoc_md30}%
+\Hypertarget{md_README_autotoc_md30}%
+ \doxysubparagraph*{CLI Example}
+
+
+\begin{DoxyEnumerate}
+\item Create a new {\ttfamily config.\+turbo.\+yaml} file 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/config -\/-\/config\_file config.turbo.yaml}
+
+\end{DoxyCode}
+
+\item Edit the {\ttfamily config.\+turbo.\+yaml} file to set {\ttfamily model} to {\ttfamily gpt-\/3.\+5-\/turbo}
+\item Run Open Interpreter with the {\ttfamily config.\+turbo.\+yaml} configuration 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{interpreter -\/-\/config\_file config.turbo.yaml}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}
+
+\label{md_README_autotoc_md31}%
+\Hypertarget{md_README_autotoc_md31}%
+ \doxysubparagraph*{Python Example}
+
+You can also load configuration files when calling Open Interpreter from Python scripts\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} os}
+\DoxyCodeLine{\textcolor{keyword}{import} interpreter}
+\DoxyCodeLine{}
+\DoxyCodeLine{currentPath = os.path.dirname(os.path.abspath(\_\_file\_\_))}
+\DoxyCodeLine{config\_path=os.path.join(currentPath, \textcolor{stringliteral}{'./config.test.yaml'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{interpreter.extend\_config(config\_path=config\_path)}
+\DoxyCodeLine{}
+\DoxyCodeLine{message = \textcolor{stringliteral}{"{}What operating system are we on?"{}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{for} chunk \textcolor{keywordflow}{in} interpreter.chat(message, display=\textcolor{keyword}{False}, stream=\textcolor{keyword}{True}):}
+\DoxyCodeLine{  print(chunk)}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md32}{}\doxysubsection{Sample Fast\+API Server}\label{md_README_autotoc_md32}
+The generator update enables Open Interpreter to be controlled via HTTP REST endpoints\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# server.py}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{from} fastapi \textcolor{keyword}{import} FastAPI, Response}
+\DoxyCodeLine{\textcolor{keyword}{import} interpreter}
+\DoxyCodeLine{}
+\DoxyCodeLine{app = FastAPI()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{preprocessor}{@app.get("{}/chat"{})}}
+\DoxyCodeLine{\textcolor{keyword}{def }chat\_endpoint(message):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} Response(interpreter.chat(message, stream=\textcolor{keyword}{True}), media\_type=\textcolor{stringliteral}{"{}text/event-\/stream"{}})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{preprocessor}{@app.get("{}/history"{})}}
+\DoxyCodeLine{\textcolor{keyword}{def }history\_endpoint():}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} interpreter.messages}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pip install fastapi uvicorn}
+\DoxyCodeLine{uvicorn server:app -\/-\/reload}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md33}{}\doxysubsection{Safety Notice}\label{md_README_autotoc_md33}
+Since generated code is executed in your local environment, it can interact with your files and system settings, potentially leading to unexpected outcomes like data loss or security risks.
+
+{\bfseries{⚠️ Open Interpreter will ask for user confirmation before executing code.}}
+
+You can run {\ttfamily interpreter -\/y} or set {\ttfamily interpreter.\+auto\+\_\+run = True} to bypass this confirmation, in which case\+:
+
+
+\begin{DoxyItemize}
+\item Be cautious when requesting commands that modify files or system settings.
+\item Watch Open Interpreter like a self-\/driving car, and be prepared to end the process by closing your terminal.
+\item Consider running Open Interpreter in a restricted environment like Google Colab or Replit. These environments are more isolated, reducing the risks associated with executing arbitrary code.
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md34}{}\doxysubsection{How Does it Work?}\label{md_README_autotoc_md34}
+Open Interpreter equips a \href{https://platform.openai.com/docs/guides/gpt/function-calling}{\texttt{ function-\/calling language model}} with an {\ttfamily exec()} function, which accepts a {\ttfamily language} (like \char`\"{}\+Python\char`\"{} or \char`\"{}\+Java\+Script\char`\"{}) and {\ttfamily code} to run.
+
+We then stream the model\textquotesingle{}s messages, code, and your system\textquotesingle{}s outputs to the terminal as Markdown.\hypertarget{md_README_autotoc_md35}{}\doxysection{Contributing}\label{md_README_autotoc_md35}
+Thank you for your interest in contributing! We welcome involvement from the community.
+
+Please see our \mbox{\hyperlink{md_CONTRIBUTING}{Contributing Guidelines}} for more details on how to get involved.\hypertarget{md_README_autotoc_md36}{}\doxysubsection{License}\label{md_README_autotoc_md36}
+Open Interpreter is licensed under the MIT License. You are permitted to use, copy, modify, distribute, sublicense and sell copies of the software.
+
+{\bfseries{Note}}\+: This software is not affiliated with Open\+AI.
+
+\begin{quote}
+Having access to a junior programmer working at the speed of your fingertips ... can make new workflows effortless and efficient, as well as open the benefits of programming to new audiences.
+
+— {\itshape Open\+AI\textquotesingle{}s Code Interpreter Release} \end{quote}
+~\newline
+ 
