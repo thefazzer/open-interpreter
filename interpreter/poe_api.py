@@ -25,4 +25,4 @@ def test_get_endpoint(mock_get):
     response = poe_api.get_endpoint("test_endpoint")
 
     mock_get.assert_called_once_with("https://api.poe.com/test_endpoint")
-    assert response == {"data": "test"}
+    assert_equal(response, {"data": "test"})
