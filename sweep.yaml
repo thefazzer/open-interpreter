@@ -3,6 +3,8 @@
 
 # This setting contains a list of rules that Sweep will check for. If any of these rules are broken in a new commit, Sweep will create an pull request to fix the broken rule.
 rules:
+  - "Code should be written to be as terse as possible ie. minimise number of lines"
+  - "Code should be optimised for speed using any language methods or libraries available"
   - "All docstrings and comments should be up to date."
   - "There should be no instances of `depracated` in the code."
   - "There should be no instances of `receive` in the code."
