@@ -7,7 +7,7 @@ class PoeAPI:
         self.base_url = base_url
 
     def get_endpoint(self, endpoint):
-        response = requests.get(f"{self.base_url}/{endpoint}")
+        response = requests.get(f"{self.base_url}/{endpoint}", timeout=5)
         response.raise_for_status()
         return response.json()
 
