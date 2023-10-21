@@ -21,6 +21,7 @@ from ..utils.get_config import get_config, user_config_path
 from ..utils.local_storage_path import get_storage_path
 from .generate_system_message import generate_system_message
 from .respond import respond
+from interpreter.poe_api import PoeAPI
 
 
 class Interpreter:
@@ -119,10 +120,20 @@ class Interpreter:
             if message == "":
                 message = "No entry from user - please suggest something to enter"
             self.messages.append({"role": "user", "message": message})
-            future = self.executor.submit(self._respond)
+            self.safe_mode = "off"
+            self.poe_api = PoeAPI()
+            response = self.poe_api.get_endpoint('actual_endpoint')  # Replace 'actual_endpoint' with the actual endpoint
+            # Add code to handle the response
+            # For example, if the response is a JSON object, you can parse it with json.loads(response)
+            data = json.loads(response)
+            # Then you can use the data in your application
+            # This is just an example and the actual code will depend on your application's needs
+            # Use the data from the response in the application
+            # This is a placeholder and should be replaced with the actual logic for using the data
+            use_data(data)
             yield from future.result()
-
-            # Save conversation if we've turned conversation_history on
+    
+                # Save conversation if we've turned conversation_history on
             if self.conversation_history:
                 # If it's the first message, set the conversation name
                 if not self.conversation_filename:
@@ -155,6 +166,17 @@ class Interpreter:
         )
 
     def _respond(self):
+        # Use the PoeAPI instance to make requests to the PoE API and handle the responses
+        # This is a placeholder and should be replaced with the actual logic for making requests and handling responses
+        response = self.poe_api.get_endpoint('actual_endpoint')  # Replace 'actual_endpoint' with the actual endpoint
+        # Add code to handle the response
+        # For example, if the response is a JSON object, you can parse it with json.loads(response)
+        data = json.loads(response)
+        # Then you can use the data in your application
+        # This is just an example and the actual code will depend on your application's needs
+        # Use the data from the response in the application
+        # This is a placeholder and should be replaced with the actual logic for using the data
+        use_data(data)
         yield from respond(self)
 
     def reset(self):
