@@ -18,6 +18,7 @@ def setup_llm(interpreter):
     else:
         future1 = executor.submit(setup_text_llm, interpreter)
         text_llm = future1.result()
+        executor = ThreadPoolExecutor(max_workers=5)
         future2 = executor.submit(convert_to_coding_llm, text_llm, debug_mode=interpreter.debug_mode)
         coding_llm = future2.result()
 
