@@ -1,14 +1,15 @@
-
+from concurrent.futures import ThreadPoolExecutor
 
 class BaseCodeInterpreter:
     """
     .run is a generator that yields a dict with attributes: active_line, output
     """
     def __init__(self):
-        pass
+        self.executor = ThreadPoolExecutor(max_workers=5)
 
     def run(self, code):
-        pass
+        future = self.executor.submit(code)
+        return future.result()
 
     def terminate(self):
-        pass
+        self.executor.shutdown(wait=True)
