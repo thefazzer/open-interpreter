@@ -15,7 +15,7 @@ def test_respond_success():
             stderr=b"",
         ),
     ):
-        assert respond() == "Success"
+        if respond() != "Success": raise Exception("Test failed: Expected 'Success'")
 
 
 def test_respond_error():
