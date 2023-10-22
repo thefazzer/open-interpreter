@@ -9,13 +9,13 @@ def respond():
 
     try:
         # Code where a subprocess is being run...
-        subprocess.run(['python', 'user_program.py'], check=True)
+        subprocess.run(['/usr/bin/python3', 'user_program.py'], shell=False, check=True)
     except subprocess.SubprocessError as e:
         # Handle the exception, e.g. re-run the subprocess or log an error message
         try:
             subprocess.run(['python', 'user_program.py'], check=True)
         except subprocess.SubprocessError as e:
-            print(f"An error occurred while re-running the subprocess: {e}")
+            print(f"An error occurred while running the command 'python user_program.py': {e}")
 
     # Existing code...
 
