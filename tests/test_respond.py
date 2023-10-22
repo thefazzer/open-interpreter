@@ -1,6 +1,6 @@
 from unittest.mock import patch
-from subprocess import CompletedProcess
-from subprocess import SubprocessError
+from subprocess import CompletedProcess  # nosec
+from subprocess import SubprocessError  # nosec
 import pytest
 
 from home.faz.devski.open_interpreter.interpreter.core.respond import respond
