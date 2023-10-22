@@ -1,5 +1,6 @@
 from unittest.mock import patch
 from subprocess import CompletedProcess
+from subprocess import SubprocessError
 import pytest
 
 from home.faz.devski.open_interpreter.interpreter.core.respond import respond
