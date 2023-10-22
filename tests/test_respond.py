@@ -20,4 +20,4 @@ def test_respond_success():
 
 def test_respond_error():
     with patch("subprocess.run", side_effect=SubprocessError):
-        assert respond() is None
+        if respond() is not None: raise Exception("Test failed: Expected None")
