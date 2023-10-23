@@ -2,13 +2,12 @@
 This file defines the Interpreter class.
 It's the main file. `import interpreter` will import an instance of this class.
 """
+from interpreter.utils import display_markdown_message
+
 import concurrent.futures
 import json
 import os
 from datetime import datetime
-
-# Removed unused import
-
 from ..cli.cli import cli
 from ..llm.setup_llm import setup_llm
 from ..rag.get_relevant_procedures_string import get_relevant_procedures_string
@@ -95,25 +94,25 @@ class Interpreter:
             pass
 
         return self.messages
-
+      
     def _streaming_chat(self, message=None, display=True):
-        # If we have a display,
-        # we can validate our LLM settings w/ the user first
-        if display:
-            validate_llm_settings(self)
+        with ThreadPoolExecutor() as executor:
+            # If we have a display,
+            # we can validate our LLM settings w/ the user first
+            if display:
+                executor.submit(validate_llm_settings, self)
 
-        # Setup the LLM
-        if not self._llm:
-            self._llm = setup_llm(self)
+            # Setup the LLM
+            if not self._llm:
+                self._llm = executor.submit(setup_llm, self).result()
 
-        # Sometimes a little more code -> a much better experience!
-        # Display mode actually runs interpreter.chat(display=False, stream=True) from within the terminal_interface.
-        # wraps the vanilla .chat(display=False) generator in a display.
-        # Quite different from the plain generator stuff. So redirect to that
-        if display:
-            future = self.executor.submit(terminal_interface, self, message)
-            yield from future.result()
-            return
+            # Sometimes a little more code -> a much better experience!
+            # Display mode actually runs interpreter.chat(display=False, stream=True) from within the terminal_interface.
+            # wraps the vanilla .chat(display=False) generator in a display.
+            # Quite different from the plain generator stuff. So redirect to that
+            if display:
+                yield from executor.submit(terminal_interface, self, message).result()
+                return
 
         # One-off message
         if message or message == "":
@@ -163,6 +162,14 @@ class Interpreter:
         )
 
     def _respond(self):
+        yield from respond(self)
+
+    def reset(self):
+        with ThreadPoolExecutor() as executor:
+            for code_interpreter in self._code_interpreters.values():
+                executor.submit(code_interpreter.terminate)
+            self._code_interpreters = {}
+
         # Use the PoeAPI instance to make requests to the PoE API and handle the responses
         # This is a placeholder and should be replaced with the actual logic for making requests and handling responses
         response = self.poe_api.get_endpoint('actual_endpoint')  # Replace with actual endpoint
@@ -194,12 +201,8 @@ class Interpreter:
         self._code_interpreters = {}
 
         # Reset the two functions below, in case the user set them
-        self.generate_system_message = lambda: generate_system_message(self)
-        self.get_relevant_procedures_string = lambda: get_relevant_procedures_string(
-            self
-        )
-
-        self.__init__()
+        self.generate_system_message = lambda: generate_s
+            self.__init__()
 
     # These functions are worth exposing to developers
     # I wish we could just dynamically expose all of our functions to devs...
