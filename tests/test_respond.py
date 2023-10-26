@@ -3,7 +3,7 @@ from subprocess import CompletedProcess  # nosec
 from subprocess import SubprocessError  # nosec
 import pytest
 
-from home.faz.devski.open_interpreter.interpreter.core.respond import respond
+from interpreter.core.respond import respond
 
 
 def test_respond_success():
