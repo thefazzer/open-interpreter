@@ -1,6 +1,6 @@
 """
-The terminal interface is just a view. Just handles the very top layer.
-If you were to build a frontend this would be a way to do it
+The terminal interface is a view that handles the top layer of the application.
+This interface can be used as a reference when building a frontend for the application.
 """
 
 from concurrent.futures import ThreadPoolExecutor
@@ -37,13 +37,17 @@ def terminal_interface(interpreter, message):
     else:
         interactive = True
 
-    while True:
-        try:
-            if interactive:
-                message = input("> ").strip()
-        except KeyboardInterrupt:
-            # Exit gracefully
-            break
+    def get_user_input():
+        while True:
+            try:
+                if interactive:
+                    message = input("> ").strip()
+            except KeyboardInterrupt:
+                # Exit gracefully
+                break
+        return message
+    
+    message = get_user_input()
 
         with ThreadPoolExecutor() as executor:
             if message.startswith("%") and interactive:
@@ -79,9 +83,8 @@ def terminal_interface(interpreter, message):
                     render_cursor = True
 
                 # Code
-                if "code" in chunk or "language" in chunk:
-                    if active_block is None:
-                        active_block = CodeBlock()
+                if "code" in chunk or "language" in chunk and active_block is None:
+                    active_block = CodeBlock()
                     if active_block.type != "code" or ran_code_block:
                         # If the last block wasn't a code block,
                         # or it was, but we already ran it:
@@ -98,8 +101,7 @@ def terminal_interface(interpreter, message):
                     active_block.active_line = chunk["active_line"]
 
                 # Execution notice
-                if "executing" in chunk:
-                    if not interpreter.auto_run:
+                if "executing" in chunk and not interpreter.auto_run:
                         # OI is about to execute code. The user wants to approve this
 
                         # End the active block so you can run input() below it
@@ -151,8 +153,7 @@ def terminal_interface(interpreter, message):
                             break
 
                 # Output
-                if "output" in chunk:
-                    ran_code_block = True
+                ran_code_block = "output" in chunk
                     render_cursor = False
                     active_block.output += "\n" + chunk["output"]
                     active_block.output = (
@@ -166,17 +167,15 @@ def terminal_interface(interpreter, message):
 
                 if active_block:
                     active_block.refresh(cursor=render_cursor)
+                    yield chunk
 
-                yield chunk
+                    # (Sometimes -- like if they CTRL-C quickly -- active_block is still None here)
+                    active_block.end()
+                    active_block = None
 
-            # (Sometimes -- like if they CTRL-C quickly -- active_block is still None here)
-            if active_block:
-                active_block.end()
-                active_block = None
-
-            if not interactive:
-                # Don't loop
-                break
+                if not interactive:
+                    # Don't loop
+                    break
 
         except KeyboardInterrupt:
             # Exit gracefully
@@ -187,5 +186,6 @@ def terminal_interface(interpreter, message):
             if interactive:
                 # (this cancels LLM, returns to the interactive "> " input)
                 continue
+            # If not interactive, break the loop
             else:
                 break
