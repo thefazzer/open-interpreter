@@ -15,78 +15,78 @@ arguments = [
         "help_text": "prompt / custom instructions for the language model",
         "type": str,
     },
-    {"name": "local", "nickname": "l", "help_text": "run the language model locally (experimental)", "type": bool},
+    {"name": "local", "nickname": "l", "help_text": "Run the language model locally (experimental)", "type": bool},
     {
         "name": "auto_run",
         "nickname": "y",
-        "help_text": "automatically run the interpreter",
+        "help_text": "Automatically run the interpreter",
         "type": bool,
     },
     {
         "name": "debug_mode",
         "nickname": "d",
-        "help_text": "run in debug mode",
+        "help_text": "Run in debug mode",
         "type": bool,
     },
     {
         "name": "model",
         "nickname": "m",
-        "help_text": "model to use for the language model",
+        "help_text": "Specify the model to use for the language model",
         "type": str,
     },
     {
         "name": "temperature",
         "nickname": "t",
-        "help_text": "optional temperature setting for the language model",
+        "help_text": "Set the temperature for the language model (optional)",
         "type": float,
     },
     {
         "name": "context_window",
         "nickname": "c",
-        "help_text": "optional context window size for the language model",
+        "help_text": "Set the context window size for the language model (optional)",
         "type": int,
     },
     {
         "name": "max_tokens",
         "nickname": "x",
-        "help_text": "optional maximum number of tokens for the language model",
+        "help_text": "Set the maximum number of tokens for the language model (optional)",
         "type": int,
     },
     {
         "name": "max_budget",
         "nickname": "b",
-        "help_text": "optionally set the max budget (in USD) for your llm calls",
+        "help_text": "Set the max budget (in USD) for your llm calls (optional)",
         "type": float,
     },
     {
         "name": "api_base",
         "nickname": "ab",
-        "help_text": "optionally set the API base URL for your llm calls (this will override environment variables)",
+        "help_text": "Set the API base URL for your llm calls (optional, overrides environment variables)",
         "type": str,
     },
     {
         "name": "api_key",
         "nickname": "ak",
-        "help_text": "optionally set the API key for your llm calls (this will override environment variables)",
+        "help_text": "Set the API key for your llm calls (optional, overrides environment variables)",
         "type": str,
     },
     {
         "name": "safe_mode",
         "nickname": "safe",
-        "help_text": "optionally enable safety mechanisms like code scanning; valid options are off, ask, and auto",
+        "help_text": "Enable safety mechanisms like code scanning (optional, valid options are off, ask, and auto)",
         "type": str,
         "choices": ["off", "ask", "auto"],
     },
     {
         "name": "gguf_quality",
         "nickname": "q",
-        "help_text": "(experimental) value from 0-1 which will select the gguf quality/quantization level. lower = smaller, faster, more quantized",
+        "help_text": "Set the gguf quality/quantization level (experimental, value from 0-1, lower = smaller, faster, more quantized)",
         "type": float,
     },
     {
         "name": "config_file",
         "nickname": "cf",
-        "help_text": "optionally set a custom config file to use",
+        "help_text": "Set a custom config file to use (optional)",
         "type": str,
     },
 ]
@@ -133,13 +133,7 @@ def cli(interpreter):
         action="store_true",
         help="list conversations to resume",
     )
-    parser.add_argument(
-        "-f",
-        "--fast",
-        dest="fast",
-        action="store_true",
-        help="(deprecated) runs `interpreter --model gpt-3.5-turbo`",
-    )
+    # The --fast argument is deprecated and should not be used
     parser.add_argument(
         "--version",
         dest="version",
@@ -243,12 +237,6 @@ def cli(interpreter):
         ooba.install(force_reinstall=True, gpu_choice=gpu_choice, verbose=args.debug_mode)
         return
 
-    # Deprecated --fast
-    if args.fast:
-        # This will cause the terminal_interface to walk the user through setting up a local LLM
-        interpreter.model = "gpt-3.5-turbo"
-        print(
-            "`interpreter --fast` is deprecated and will be removed in the next version. Please use `interpreter --model gpt-3.5-turbo`"
-        )
+    # The --fast argument is deprecated and should not be used
 
     interpreter.chat()
