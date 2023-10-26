@@ -9,7 +9,7 @@ class BaseCodeInterpreter:
     def __init__(self, max_workers=5):
         """
         Initialize the BaseCodeInterpreter with a ThreadPoolExecutor.
-        
+
         Args:
             max_workers (int): The maximum number of workers in the thread pool.
         """
@@ -18,13 +18,13 @@ class BaseCodeInterpreter:
     def run(self, code):
         """
         Run the given code in a separate thread and return the result.
-        
+
         Args:
             code (callable): The code to be executed.
-            
+
         Returns:
             The result of the code execution.
-            
+
         Raises:
             Exception: If an error occurs during code execution.
         """
@@ -38,7 +38,7 @@ class BaseCodeInterpreter:
     def terminate(self):
         """
         Terminate the code execution by shutting down the executor.
-        
+
         This method will block until all running tasks are done and the executor is shut down.
         """
         self.executor.shutdown(wait=True)
