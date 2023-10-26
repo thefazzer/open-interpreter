@@ -1,5 +1,6 @@
 import os
 from secrets import randbelow
+from random import randint
 import pytest
 from pytest import mark
 import pytest_xdist
@@ -106,24 +107,23 @@ def test_hello_world(hello_world_message):
     ]
 
 @mark.skip(reason="Math is hard")
-@mark.parametrize("n1, n2", [(randbelow(100), randbelow(10000))])
-min_number = randbelow(100)
-max_number = randbelow(10000)
-n1 = randbelow(max_number - min_number + 1) + min_number
-n2 = randbelow(max_number - min_number + 1) + min_number
-n2 = randint(min_number, max_number)
+@mark.parametrize("min_number, max_number", [(randbelow(100), randbelow(10000))])
+def test_order_of_operations(min_number, max_number):
+    n1 = randbelow(max_number - min_number + 1) + min_number
+    n2 = randbelow(max_number - min_number + 1) + min_number
+    n2 = randint(min_number, max_number)
 
-test_result = n1 + n2 * (n1 - n2) / (n2 + n1)
+    test_result = n1 + n2 * (n1 - n2) / (n2 + n1)
 
-order_of_operations_message = f"""
-Please perform the calculation `{n1} + {n2} * ({n1} - {n2}) / ({n2} + {n1})` then reply with just the answer, nothing else. No confirmation. No explanation. No words. Do not use commas. Do not show your work. Just return the result of the calculation. Do not introduce the results with a phrase like \"The result of the calculation is...\" or \"The answer is...\"
-Round to 2 decimal places.
-""".strip()
+    order_of_operations_message = f"""
+    Please perform the calculation `{n1} + {n2} * ({n1} - {n2}) / ({n2} + {n1})` then reply with just the answer, nothing else. No confirmation. No explanation. No words. Do not use commas. Do not show your work. Just return the result of the calculation. Do not introduce the results with a phrase like \"The result of the calculation is...\" or \"The answer is...\"
+    Round to 2 decimal places.
+    """.strip()
 
-messages = interpreter.chat(order_of_operations_message)
+    messages = interpreter.chat(order_of_operations_message)
 
-if not str(round(test_result, 2)) in messages[-1]["message"]:
-    raise AssertionError()
+    if not str(round(test_result, 2)) in messages[-1]["message"]:
+        raise AssertionError()
 
 @mark.parametrize("delayed_exec_message", ["Can you write a single block of code and run_code it that prints something, then delays 1 second, then prints something else? No talk just code. Thanks!"])
 def test_delayed_exec(delayed_exec_message):
