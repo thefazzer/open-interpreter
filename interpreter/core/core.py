@@ -1,10 +1,10 @@
 """
-This file defines the Interpreter class.
-It's the main file. `import interpreter` will import an instance of this class.
+This file defines the Interpreter class, which is the main class for the interpreter module.
+When you `import interpreter`, you are actually importing an instance of this class.
 """
 from interpreter.utils import display_markdown_message
 
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 from datetime import datetime
@@ -22,24 +22,34 @@ from .generate_system_message import generate_system_message
 from .respond import respond
 from interpreter.poe_api import PoeAPI
 
-
 class Interpreter:
+    """
+    The Interpreter class is responsible for managing the state and settings of the interpreter.
+    It also provides methods for interacting with the interpreter via the command line interface (CLI).
+    """
     def cli(self):
+        """
+        This method starts the command line interface (CLI) for the interpreter.
+        """
         cli(self)
 
     def __init__(self):
+        """
+        Initializes the Interpreter with default state and settings.
+        """
         # State
-        self.messages = []
-        self._code_interpreters = {}
+        self.messages = []  # List to store messages
+        self._code_interpreters = {}  # Dictionary to store code interpreters
 
+        # Configuration file path
         self.config_file = user_config_path
 
         # Settings
-        self.local = False
-        self.auto_run = False
-        self.debug_mode = False
-        self.max_output = 2000
-        self.safe_mode = "off"
+        self.local = False  # Flag to indicate if the interpreter should run locally
+        self.auto_run = False  # Flag to indicate if the interpreter should run automatically
+        self.debug_mode = False  # Flag to indicate if the interpreter should run in debug mode
+        self.max_output = 2000  # Maximum output length
+        self.safe_mode = "off"  # Safety mode setting
 
         # Conversation history
         self.conversation_history = True
@@ -63,7 +73,7 @@ class Interpreter:
         self._procedures_db = {}
         self.download_open_procedures = True
         self.embed_function = embed_function
-        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        self.executor = ThreadPoolExecutor(max_workers=5)
         # Number of procedures to add to the system message
         self.num_procedures = 2
 
@@ -86,6 +96,18 @@ class Interpreter:
         self.__dict__.update(config)
 
     def chat(self, message=None, display=True, stream=False):
+        """
+        This method starts a chat session. If stream is True, it returns a generator that yields chat messages.
+        If stream is False, it pulls all messages from the stream and returns them as a list.
+
+        Args:
+            message (str, optional): An initial message to start the chat session. Defaults to None.
+            display (bool, optional): A flag indicating whether to display the chat messages. Defaults to True.
+            stream (bool, optional): A flag indicating whether to return a stream of chat messages. Defaults to False.
+
+        Returns:
+            list or generator: A list or stream of chat messages.
+        """
         if stream:
             return self._streaming_chat(message=message, display=display)
 
@@ -96,9 +118,18 @@ class Interpreter:
         return self.messages
       
     def _streaming_chat(self, message=None, display=True):
+        """
+        This method starts a streaming chat session. It returns a generator that yields chat messages.
+
+        Args:
+            message (str, optional): An initial message to start the chat session. Defaults to None.
+            display (bool, optional): A flag indicating whether to display the chat messages. Defaults to True.
+
+        Returns:
+            generator: A stream of chat messages.
+        """
         with ThreadPoolExecutor() as executor:
-            # If we have a display,
-            # we can validate our LLM settings w/ the user first
+            # If we have a display, we can validate our LLM settings w/ the user first
             if display:
                 executor.submit(validate_llm_settings, self)
 
@@ -120,7 +151,7 @@ class Interpreter:
                 message = "No entry from user - please suggest something to enter"
             self.messages.append({"role": "user", "message": message})
             self.safe_mode = "off"
-            self.poe_api = PoeAPI()
+            self.poe_api = PoeAPI()  # Initialize the PoeAPI
             response = self.poe_api.get_endpoint('actual_endpoint')  # Replace with actual endpoint
             # Handle the response
             data = json.loads(response)
@@ -176,12 +207,16 @@ class Interpreter:
         # Handle the response
         data = json.loads(response)
         # Use the data in the application
-        # Implement logic to use data in the application
         self.use_data(data)
         
         def use_data(self, data):
-        # Handle the data received from the PoE API
-        # The exact implementation of this function will depend on the specific needs of the application
+        """
+        This method handles the data received from the PoE API.
+        The exact implementation of this function will depend on the specific needs of the application.
+
+        Args:
+            data (dict): The data received from the PoE API.
+        """
         # For example, if the data is a dictionary, you can access its elements like this:
         element = data['key']  # Replace with actual key
         # Then you can use the element in your application
@@ -197,7 +232,7 @@ class Interpreter:
         for code_interpreter in self._code_interpreters.values():
             code_interpreter.terminate()
         self.executor.shutdown(wait=True)
-        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        self.executor = ThreadPoolExecutor(max_workers=5)
         self._code_interpreters = {}
 
         # Reset the two functions below, in case the user set them
