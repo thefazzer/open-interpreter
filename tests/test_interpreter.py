@@ -1,6 +1,7 @@
 import os
+import time
 from secrets import randbelow
-from random import randint
+from secrets import randint
 import pytest
 from pytest import mark
 import pytest_xdist
@@ -42,8 +43,8 @@ def test_config_loading(config_path):
     temperature_ok = interpreter.temperature == 0.8
     model_ok = interpreter.model == "gpt-3.5-turbo"
     debug_mode_ok = interpreter.debug_mode
-    if not (temperature_ok and model_ok and debug_mode_ok):
-        raise AssertionError()
+    if not all([temperature_ok, model_ok, debug_mode_ok]):
+        raise AssertionError("Config loading failed.")
 
 @mark.parametrize("ping_request, pong_response", [("ping", "pong")])
 def test_system_message_appending(ping_request, pong_response):
@@ -88,8 +89,8 @@ def test_token_counter(system_message, prompt):
 
     prompt_tokens_ok = system_tokens + prompt_tokens == prompt_token_test[0]
 
-    if not (system_tokens_ok and prompt_tokens_ok):
-        raise AssertionError()
+    if not all([system_tokens_ok, prompt_tokens_ok]):
+        raise AssertionError("Token counter test failed.")
 
 
 @mark.parametrize("hello_world_message", ["Please reply with just the words Hello, World! and nothing else. Do not run code. No confirmation just the text."])
@@ -109,9 +110,9 @@ def test_hello_world(hello_world_message):
 @mark.skip(reason="Math is hard")
 @mark.parametrize("min_number, max_number", [(randbelow(100), randbelow(10000))])
 def test_order_of_operations(min_number, max_number):
-    n1 = randbelow(max_number - min_number + 1) + min_number
-    n2 = randbelow(max_number - min_number + 1) + min_number
-    n2 = randint(min_number, max_number)
+    n1 = secrets.randbelow(max_number - min_number + 1) + min_number
+    n2 = secrets.randbelow(max_number - min_number + 1) + min_number
+    n2 = secrets.randint(min_number, max_number)
 
     test_result = n1 + n2 * (n1 - n2) / (n2 + n1)
 
