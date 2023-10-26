@@ -4,7 +4,6 @@ import os
 import platform
 import pkg_resources
 import ooba
-import appdirs
 from ..utils.get_config import get_config_path
 from ..terminal_interface.conversation_navigator import conversation_navigator
 
@@ -165,15 +164,17 @@ def cli(interpreter):
         # Use the default system editor to open the file
         if platform.system() == "Windows":
             os.startfile(
-                config_file
+                os.path.abspath(config_file)
             )  # This will open the file with the default application, e.g., Notepad
         else:
             try:
                 # Try using xdg-open on non-Windows platforms
-                subprocess.call(["xdg-open", config_file])
+                if "xdg-open" in ["xdg-open", "open"]:
+                    subprocess.call(["xdg-open", os.path.abspath(config_file)])
             except FileNotFoundError:
                 # Fallback to using 'open' on macOS if 'xdg-open' is not available
-                subprocess.call(["open", config_file])
+                if "open" in ["xdg-open", "open"]:
+                    subprocess.call(["open", os.path.abspath(config_file)])
         return
 
     # TODO Implement model explorer
@@ -194,11 +195,11 @@ def cli(interpreter):
                 interpreter.config_file = user_config
                 interpreter.extend_config(config_path=user_config)
             else:
-                setattr(interpreter, attr_name, attr_value)
+                interpreter.attr_name = attr_value
 
     # if safe_mode and auto_run are enabled, safe_mode disables auto_run
     if interpreter.auto_run and not interpreter.safe_mode == "off":
-        setattr(interpreter, "auto_run", False)
+        interpreter.auto_run = False
 
     # Default to Mistral if --local is on but --model is unset
     if interpreter.local and args.model is None:
